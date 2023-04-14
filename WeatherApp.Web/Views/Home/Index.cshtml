@@ -1,0 +1,37 @@
+﻿@using System.Globalization
+@model WeatherApp.Helpers.WeatherInfo
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+    <div class="card bg-dark bg-gradient h-100 mb-5 rounded-5 shadow-lg">
+        <div class="d-flex flex-column align-items-center h-100 p-5 text-white">
+            @if (Model != null)
+            {
+                <h5 class="display-6 lh-1">@Model.Location.Name</h5>
+                <h2 class="display-3">@Model.Current.TempC&deg;</h2>
+                <h5>@Model.Current.Condition.Text</h5>
+                <h5>L: @Model.Forecast.ForecastDay[0].Day.MinTempC&deg; H: @Model.Forecast.ForecastDay[0].Day.MaxTempC&deg;</h5>
+            }
+        </div>
+    </div>
+    <div class="card forecast border-2 h-100 mb-5 rounded-5">
+        <div class="d-flex flex-row align-items-center h-100 p-4 text-white">
+            @foreach (var forecastDay in Model.Forecast.ForecastDay)
+            {
+                var dateString = forecastDay.Date;
+                var dateValue = DateTime.Parse(dateString, CultureInfo.InvariantCulture);
+                if (dateValue.Date == DateTime.Now.Date) continue;
+
+                <div class="d-flex flex-column align-items-center px-3">
+                    <h6>@dateValue.ToString("ddd")</h6>
+                    <img class="weather-icon" src="@forecastDay.Day.Condition.Icon" alt="Icon"/>
+                    <h6>@forecastDay.Day.MaxTempC&deg;</h6>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
